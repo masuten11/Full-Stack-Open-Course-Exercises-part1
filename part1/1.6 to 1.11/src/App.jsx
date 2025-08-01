@@ -1,25 +1,34 @@
 import { useState } from 'react'
 
 const App = () => {
-  // Save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const total = good + neutral + bad;
+  const average = total ? (good - bad) / total : 0;
+  const positive = total ? (good * 100) / total : 0;
+
+  const handleButtonClick = (setter) => {
+    setter(prev => prev + 1);
+  };
 
   return (
     <div>
       <h2>Give Feedback</h2>
-
-      <button onClick={() => setGood(good + 1)}>Good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>Neutral</button>
-      <button onClick={() => setBad(bad + 1)}>Bad</button>
+      <button onClick={() => handleButtonClick(setGood)}>Good</button>
+      <button onClick={() => handleButtonClick(setNeutral)}>Neutral</button>
+      <button onClick={() => handleButtonClick(setBad)}>Bad</button>
 
       <h2>Statistics</h2>
       <p>Good: {good}</p>
       <p>Neutral: {neutral}</p>
       <p>Bad: {bad}</p>
+      <p>All: {total}</p>
+      <p>Average: {average.toFixed(2)}</p>
+      <p>Positive: {positive.toFixed(2)}%</p>
     </div>
-  )
+  );
 }
 
 export default App
