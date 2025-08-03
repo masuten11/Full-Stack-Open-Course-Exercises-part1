@@ -1,17 +1,23 @@
 import { useState } from 'react'
 
+const StatisticsLine = ({ text, value }) => {
+  return (
+    <p>{text}: {value}</p>
+  )
+}
+
 const Statistics = ({ good, neutral, bad, total, average, positive }) => {
   return (
     <>
       {total && total > 0 ?
         <>
           <h2>Statistics</h2>
-          <p>Good: {good}</p>
-          <p>Neutral: {neutral}</p>
-          <p>Bad: {bad}</p>
-          <p>All: {total}</p>
-          <p>Average: {average.toFixed(2)}</p>
-          <p>Positive: {positive.toFixed(2)}%</p>
+          <StatisticsLine text="Good:" value={good}/>
+          <StatisticsLine text="Neutral:" value={neutral}/>
+          <StatisticsLine text="Bad:" value={bad}/>
+          <StatisticsLine text="Total:" value={total}/>
+          <StatisticsLine text="Average:" value={average.toFixed(2)}/>
+          <StatisticsLine text="Positive:" value={positive.toFixed(2)}/>
         </> :
         <h3>No feedback given</h3> }
     </>
