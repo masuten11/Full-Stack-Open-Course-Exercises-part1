@@ -1,8 +1,6 @@
 import { useState } from 'react'
 
 const App = () => {
-  const [selected, setSelected] = useState(0);
-  const [votes, setVotes] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 });
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -13,6 +11,12 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ];
+  
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 });
+  const votesArr = Object.values(votes);
+  const highestVote = Math.max(...votesArr);
+  const highestVotedIndex = Object.keys(votes).find(key => votes[key] === highestVote);
 
   const handleVoteAnecdots = () => {
     const updatedValue = votes[selected] + 1;
@@ -20,7 +24,7 @@ const App = () => {
   }
 
   const handleShowAnecdots = () => {
-    const randomInx = Math.floor(Math.random() * anecdotes.length - 1);
+    const randomInx = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomInx);
   }
 
@@ -30,6 +34,10 @@ const App = () => {
       <h4>has {votes[selected]} votes</h4>
       <button onClick={() => handleVoteAnecdots()}>Vote</button>
       <button onClick={() => handleShowAnecdots()}>Show Anecdotes</button>
+
+      <h4>Anicdotes with most votes</h4>
+      <h4>{anecdotes[highestVotedIndex]}</h4>
+      <h4>has {highestVote} votes</h4>
     </div>
   )
 }
