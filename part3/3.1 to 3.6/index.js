@@ -1,6 +1,8 @@
 import express from 'express';
-
 const app = express();
+
+app.use(express.json());
+
 
 let phonebook = [
   { id: "1", name: "Arto Hellas", number: "040-123456" },
@@ -19,11 +21,11 @@ app.get('/info/', (req, res) => {
   const persons = phonebook.length;
   const currTime = new Date();
   const message =
-  `<p>Phonebook has info for ${persons} people</p>
+    `<p>Phonebook has info for ${persons} people</p>
    <p>${currTime}</p>`;
 
-   // Send the response
-   res.send(message);
+  // Send the response
+  res.send(message);
 });
 
 // Route for /api/persons/:id
@@ -46,7 +48,50 @@ app.delete('/api/persons/:id', (req, res) => {
 
   // end the response
   res.status(204).end();
-})
+});
+
+// Function to generate ID
+const generateId = () => {
+  const maxId = phonebook.length > 0 ?
+    Math.max(...phonebook.map(n => Number(n.id))) : 0;
+
+  return String(maxId + 1);
+};
+
+// Route for adding resources
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+  const name = body.name;
+  const number = body.number;
+
+  // If the name or number is not provided
+  if (!name || !number) {
+    return res.status(400).json({
+      error: 'missing'
+    });
+  };
+
+  // Check for dublication
+  const nameExists = phonebook.map(per => per.name).includes(name);
+  // Response with duplication error
+  if (nameExists) {
+    return res.status(400).json({
+      error: 'names must be unique'
+    });
+  };
+
+  // new person to add
+  const person = {
+    name: name,
+    number: number,
+    id: generateId()
+  }
+
+  // update the phonebook
+  phonebook = phonebook.concat(person);
+  // response with new person
+  res.json(person);
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
