@@ -1,7 +1,17 @@
 import express from 'express';
+import morgan from 'morgan';
+
 const app = express();
 
-app.use(express.json());
+app.use(express.json()); //?????????????
+
+// Define custom body token for morgan
+morgan.token('body', function (req, res) {
+  return req.method === 'POST' ?
+  JSON.stringify(req.body) : '';
+});
+// Use custom token in the logging format
+app.use(morgan(`:method :url :status :res[content-length] - :response-time ms :body`)); // 'tiny' as a parameter
 
 
 let phonebook = [
@@ -54,7 +64,6 @@ app.delete('/api/persons/:id', (req, res) => {
 const generateId = () => {
   const maxId = phonebook.length > 0 ?
     Math.max(...phonebook.map(n => Number(n.id))) : 0;
-
   return String(maxId + 1);
 };
 
